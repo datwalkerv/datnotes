@@ -13,6 +13,7 @@ import { generateId } from "@/lib/utils";
 import TopBar from "./TopBar";
 import Editor from "./Editor";
 import SettingsModal from "./SettingsModal";
+import ShareModal from "./ShareModal";
 
 function makeEmptyNote(): Note {
   const now = new Date().toISOString();
@@ -23,6 +24,7 @@ export default function App() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -124,10 +126,14 @@ export default function App() {
         e.preventDefault();
         createNote();
       }
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "S") {
+        e.preventDefault();
+        if (activeNote?.content) setShareOpen(true);
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [createNote]);
+  }, [createNote, activeNote]);
 
   const activeNote = notes.find((n) => n.id === activeId) ?? null;
 
@@ -144,6 +150,8 @@ export default function App() {
         onCreate={createNote}
         onDelete={deleteNote}
         onOpenSettings={() => setSettingsOpen(true)}
+        onOpenShare={() => setShareOpen(true)}
+        canShare={!!activeNote?.content}
       />
 
       <main className="flex flex-1 flex-col overflow-hidden">
@@ -158,6 +166,10 @@ export default function App() {
           onDeleteAll={deleteAll}
           onClose={() => setSettingsOpen(false)}
         />
+      )}
+
+      {shareOpen && activeNote && (
+        <ShareModal note={activeNote} onClose={() => setShareOpen(false)} />
       )}
     </div>
   );

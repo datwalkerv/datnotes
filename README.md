@@ -18,6 +18,7 @@ A minimal, distraction-free note-taking app that lives entirely in your browser.
 - **🔄 Session Restore**: The last active note is remembered across page refreshes so you always pick up exactly where you left off.
 - **🗑️ Safe Deletion**: Delete individual notes via a hover-revealed button, or wipe everything from the settings panel with a mandatory confirmation step.
 - **🌟 Premium Minimal UI**: Dark neutral interface with a neon green accent, smooth hover states, and a distraction-free writing experience.
+- **🔗 Serverless Sharing**: Share any note as a self-contained link — the note is compressed and encoded entirely in the URL fragment, so it never touches a server.
 
 
 ## 🛠️ Technology Stack
@@ -40,6 +41,11 @@ datnotes was inspired by **notes.app** — a beautifully simple note-taking site
 ### Fully Client-Side
 - datnotes has **no backend, no database, no API, and no authentication**. The entire application runs in your browser.
 - Your notes never leave your device. Nothing is transmitted, logged, or stored anywhere other than your own browser's local storage.
+
+### Sharing
+- Shared notes travel **inside the URL fragment** (`/s#…`). Fragments are never sent in HTTP requests, so note content never appears in any server access log — not even Vercel's or a CDN's.
+- A shared link is readable by **anyone who receives it**. This is intentional and stated clearly in the share dialog. There is no password, no expiry, and no revocation — a shared link is a handout.
+- Shared note pages are marked `noindex` so they don't appear in search engine results.
 
 ### Privacy Policy
 - datnotes collects **absolutely nothing** about you. No analytics, no telemetry, no cookies, no tracking of any kind.

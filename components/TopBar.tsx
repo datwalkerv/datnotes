@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Settings, X } from "lucide-react";
+import { Plus, Settings, Share2, X } from "lucide-react";
 import { useRef, useState } from "react";
 import type { Note } from "@/lib/types";
 import { getTitle } from "@/lib/utils";
@@ -12,6 +12,8 @@ interface Props {
   onCreate: () => void;
   onDelete: (id: string) => void;
   onOpenSettings: () => void;
+  onOpenShare: () => void;
+  canShare: boolean;
 }
 
 export default function TopBar({
@@ -21,6 +23,8 @@ export default function TopBar({
   onCreate,
   onDelete,
   onOpenSettings,
+  onOpenShare,
+  canShare,
 }: Props) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -92,6 +96,14 @@ export default function TopBar({
 
       {/* Action buttons */}
       <div className="flex flex-shrink-0 items-center gap-1 border-l border-[#1a1a1a] px-2">
+        <button
+          onClick={onOpenShare}
+          disabled={!canShare}
+          title="Share note (⌘⇧S)"
+          className="flex h-7 w-7 items-center justify-center rounded text-[#555] transition-colors hover:bg-[#1a1a1a] hover:text-[#39ff14] disabled:cursor-not-allowed disabled:opacity-30"
+        >
+          <Share2 size={13} strokeWidth={2} />
+        </button>
         <button
           onClick={onCreate}
           title="New note (⌘N)"

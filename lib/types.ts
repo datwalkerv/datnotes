@@ -9,3 +9,8 @@ export interface AppState {
   notes: Note[];
   activeNoteId: string | null;
 }
+
+export interface SharedPayload {
+  v: number;
+  n: Array<{ c: string; ca: string; ua: string }>;
+}
