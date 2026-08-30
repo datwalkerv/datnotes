@@ -41,19 +41,19 @@ export function fromBase64Url(str: string): Uint8Array {
 export async function deflate(bytes: Uint8Array): Promise<Uint8Array> {
   const stream = new CompressionStream("deflate-raw");
   const writer = stream.writable.getWriter();
-  writer.write(bytes);
+  writer.write(new Uint8Array(bytes.buffer as ArrayBuffer, bytes.byteOffset, bytes.byteLength));
   writer.close();
   const buf = await new Response(stream.readable).arrayBuffer();
-  return new Uint8Array(buf);
+  return new Uint8Array(buf as ArrayBuffer);
 }
 
 export async function inflate(bytes: Uint8Array): Promise<Uint8Array> {
   const stream = new DecompressionStream("deflate-raw");
   const writer = stream.writable.getWriter();
-  writer.write(bytes);
+  writer.write(new Uint8Array(bytes.buffer as ArrayBuffer, bytes.byteOffset, bytes.byteLength));
   writer.close();
   const buf = await new Response(stream.readable).arrayBuffer();
-  return new Uint8Array(buf);
+  return new Uint8Array(buf as ArrayBuffer);
 }
 
 const hasCompressionStream =

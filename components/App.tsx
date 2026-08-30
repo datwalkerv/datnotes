@@ -120,6 +120,8 @@ export default function App() {
     saveActiveNoteId(note.id);
   }, []);
 
+  const activeNote = notes.find((n) => n.id === activeId) ?? null;
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "n") {
@@ -134,8 +136,6 @@ export default function App() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [createNote, activeNote]);
-
-  const activeNote = notes.find((n) => n.id === activeId) ?? null;
 
   if (!mounted) {
     return <div className="h-screen bg-[#0a0a0a]" />;
