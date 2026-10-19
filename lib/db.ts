@@ -11,10 +11,10 @@ export interface ContribDoc {
 const g = globalThis as unknown as { _mongo?: Promise<MongoClient> };
 
 export async function contribs() {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) throw new Error("MONGODB_URI is not set (see .env.example)");
+  const { MONGODB_URI: uri, MONGODB_DB: dbName } = process.env;
+  if (!uri || !dbName) throw new Error("MONGODB_URI and MONGODB_DB must be set (see .env.example)");
   g._mongo ??= new MongoClient(uri).connect();
-  return (await g._mongo).db().collection<ContribDoc>("contribs");
+  return (await g._mongo).db(dbName).collection<ContribDoc>("contribs");
 }
 
 const B64URL = /^[A-Za-z0-9_-]+$/;
