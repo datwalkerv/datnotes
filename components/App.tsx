@@ -10,6 +10,7 @@ import {
   saveNotes,
 } from "@/lib/storage";
 import { generateId } from "@/lib/utils";
+import { encrypt, newKey } from "@/lib/crypto";
 import TopBar from "./TopBar";
 import Editor from "./Editor";
 import SettingsModal from "./SettingsModal";
@@ -25,6 +26,8 @@ export default function App() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [contribOpen, setContribOpen] = useState(false);
+  const [contribBusy, setContribBusy] = useState(false);
   const [mounted, setMounted] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -122,6 +125,34 @@ export default function App() {
 
   const activeNote = notes.find((n) => n.id === activeId) ?? null;
 
+  const openContrib = useCallback(async () => {
+    if (!activeNote) return;
+    if (activeNote.contribUrl) return setContribOpen(true);
+    setContribBusy(true);
+    try {
+      const key = await newKey();
+      const res = await fetch("/api/c", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(await encrypt(key, activeNote.content)),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { id } = await res.json();
+      const contribUrl = `${window.location.origin}/c/${id}#${key}`;
+      setNotes((prev) => {
+        const updated = prev.map((n) => (n.id === activeNote.id ? { ...n, contribUrl } : n));
+        saveNotes(updated);
+        return updated;
+      });
+      setContribOpen(true);
+    } catch (err) {
+      console.error("Failed to create contribution note", err);
+      alert("Couldn't create the contribution note. Please try again.");
+    } finally {
+      setContribBusy(false);
+    }
+  }, [activeNote]);
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "n") {
@@ -152,6 +183,9 @@ export default function App() {
         onOpenSettings={() => setSettingsOpen(true)}
         onOpenShare={() => setShareOpen(true)}
         canShare={!!activeNote?.content}
+        onOpenContrib={openContrib}
+        canContrib={!contribBusy && (!!activeNote?.contribUrl || !!activeNote?.content)}
+        isContrib={!!activeNote?.contribUrl}
       />
 
       <main className="flex flex-1 flex-col overflow-hidden">
@@ -170,6 +204,14 @@ export default function App() {
 
       {shareOpen && activeNote && (
         <ShareModal note={activeNote} onClose={() => setShareOpen(false)} />
+      )}
+
+      {contribOpen && activeNote?.contribUrl && (
+        <ShareModal
+          note={activeNote}
+          url={activeNote.contribUrl}
+          onClose={() => setContribOpen(false)}
+        />
       )}
     </div>
   );

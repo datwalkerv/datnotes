@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Settings, Share2, X } from "lucide-react";
+import { Plus, Settings, Share2, Users, X } from "lucide-react";
 import { useRef, useState } from "react";
 import type { Note } from "@/lib/types";
 import { getTitle } from "@/lib/utils";
@@ -14,6 +14,9 @@ interface Props {
   onOpenSettings: () => void;
   onOpenShare: () => void;
   canShare: boolean;
+  onOpenContrib: () => void;
+  canContrib: boolean;
+  isContrib: boolean;
 }
 
 export default function TopBar({
@@ -25,6 +28,9 @@ export default function TopBar({
   onOpenSettings,
   onOpenShare,
   canShare,
+  onOpenContrib,
+  canContrib,
+  isContrib,
 }: Props) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -103,6 +109,16 @@ export default function TopBar({
           className="flex h-7 w-7 items-center justify-center rounded text-[#555] transition-colors hover:bg-[#1a1a1a] hover:text-[#39ff14] disabled:cursor-not-allowed disabled:opacity-30"
         >
           <Share2 size={13} strokeWidth={2} />
+        </button>
+        <button
+          onClick={onOpenContrib}
+          disabled={!canContrib}
+          title={isContrib ? "Contribution link" : "Make contribution note"}
+          className={`flex h-7 w-7 items-center justify-center rounded transition-colors hover:bg-[#1a1a1a] hover:text-[#39ff14] disabled:cursor-not-allowed disabled:opacity-30 ${
+            isContrib ? "text-[#39ff14]" : "text-[#555]"
+          }`}
+        >
+          <Users size={13} strokeWidth={2} />
         </button>
         <button
           onClick={onCreate}

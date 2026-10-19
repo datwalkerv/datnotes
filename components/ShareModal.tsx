@@ -14,6 +14,8 @@ const SOFT_LIMIT = 4000;
 
 interface Props {
   note: Note;
+  // Prebuilt link (contribution note); skips the fragment encoding
+  url?: string;
   onClose: () => void;
 }
 
@@ -26,20 +28,23 @@ function getSizeTier(urlLen: number): SizeTier {
   return "ok";
 }
 
-export default function ShareModal({ note, onClose }: Props) {
+export default function ShareModal({ note, url, onClose }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [tab, setTab] = useState<Tab>("link");
-  const [shareUrl, setShareUrl] = useState<string | null>(null);
-  const [urlLen, setUrlLen] = useState(0);
+  const [encodedUrl, setEncodedUrl] = useState<string | null>(null);
+  const [encodedLen, setEncodedLen] = useState(0);
+  const shareUrl = url ?? encodedUrl;
+  const urlLen = url ? url.length : encodedLen;
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    if (url) return;
     encodeNote(note).then((fragment) => {
       const url = `${window.location.origin}/s#${fragment}`;
-      setShareUrl(url);
-      estimateUrlLength(note, window.location.origin).then(setUrlLen);
+      setEncodedUrl(url);
+      estimateUrlLength(note, window.location.origin).then(setEncodedLen);
     });
-  }, [note]);
+  }, [note, url]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -98,7 +103,7 @@ export default function ShareModal({ note, onClose }: Props) {
         </button>
 
         {/* Header */}
-        <p className="mb-4 text-sm font-semibold text-[#e8e8e8]">Share note</p>
+        <p className="mb-4 text-sm font-semibold text-[#e8e8e8]">{url ? "Contribution note" : "Share note"}</p>
 
         {/* Tabs */}
         <div className="mb-4 flex gap-1 rounded-lg border border-[#1a1a1a] bg-[#0d0d0d] p-0.5">
@@ -143,7 +148,7 @@ export default function ShareModal({ note, onClose }: Props) {
             </div>
 
             {/* Size meter */}
-            {urlLen > 0 && (
+            {!url && urlLen > 0 && (
               <div>
                 <div className="mb-1 flex justify-between text-[10px] text-[#444]">
                   <span>Link size</span>
@@ -213,7 +218,9 @@ export default function ShareModal({ note, onClose }: Props) {
 
         {/* Disclaimer */}
         <p className="mt-4 text-center text-[10px] text-[#333]">
-          Anyone with this link can read this note.
+          {url
+            ? "Anyone with this link can read and edit this note."
+            : "Anyone with this link can read this note."}
         </p>
       </div>
     </div>
