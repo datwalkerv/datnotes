@@ -35,7 +35,7 @@ export default function Editor({ note, onChange }: Props) {
         key={note.id}
         defaultValue={note.content}
         onChange={(e) => onChange(note.id, e.target.value)}
-        className="flex-1 overflow-y-auto bg-transparent px-8 py-8 text-[15px] leading-relaxed text-[#d8d8d8] placeholder-[#2a2a2a] focus:outline-none"
+        className="flex-1 overflow-y-auto bg-transparent px-8 py-8 text-[15px] leading-relaxed text-(--dt-foreground) placeholder:text-(--dt-icon-tertiary) focus:outline-none"
         placeholder="Start writing…"
         spellCheck
         autoComplete="off"

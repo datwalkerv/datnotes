@@ -36,7 +36,7 @@ export default function TopBar({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
-    <header className="flex h-11 flex-shrink-0 items-stretch border-b border-[#1a1a1a] bg-[#0f0f0f]">
+    <header className="flex h-11 flex-shrink-0 items-stretch border-b border-(--dt-border) bg-(--dt-background-secondary)">
       {/* Scrollable note tabs */}
       <div
         ref={scrollRef}
@@ -52,10 +52,10 @@ export default function TopBar({
           return (
             <div
               key={note.id}
-              className={`group relative flex flex-shrink-0 cursor-pointer items-center gap-2 border-r border-[#1a1a1a] px-4 transition-colors ${
+              className={`group relative flex flex-shrink-0 cursor-pointer items-center gap-2 border-r border-(--dt-border) px-4 transition-colors ${
                 isActive
-                  ? "bg-[#0a0a0a]"
-                  : "hover:bg-[#141414]"
+                  ? "bg-(--dt-background)"
+                  : "hover:bg-(--dt-background-tertiary)"
               }`}
               style={{ maxWidth: 180 }}
               onClick={() => onSelect(note.id)}
@@ -65,17 +65,17 @@ export default function TopBar({
               {isActive && (
                 <span
                   className="absolute bottom-0 left-0 right-0 h-px"
-                  style={{ background: "#39ff14" }}
+                  style={{ background: "var(--dt-primary)" }}
                 />
               )}
 
               <span
                 className={`truncate text-xs font-medium ${
-                  isActive ? "text-[#e8e8e8]" : "text-[#555]"
+                  isActive ? "text-(--dt-foreground)" : "text-(--dt-subtle-foreground)"
                 }`}
               >
                 {title === "Untitled" ? (
-                  <span className={isActive ? "text-[#444]" : "text-[#333]"}>
+                  <span className={isActive ? "text-(--dt-icon-tertiary)" : "text-(--dt-icon-tertiary)"}>
                     Untitled
                   </span>
                 ) : (
@@ -90,7 +90,7 @@ export default function TopBar({
                     onDelete(note.id);
                   }}
                   title="Delete note"
-                  className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded text-[#444] transition-colors hover:text-red-400"
+                  className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded text-(--dt-icon-tertiary) transition-colors hover:text-(--dt-destructive-hover)"
                 >
                   <X size={10} strokeWidth={2.5} />
                 </button>
@@ -101,12 +101,12 @@ export default function TopBar({
       </div>
 
       {/* Action buttons */}
-      <div className="flex flex-shrink-0 items-center gap-1 border-l border-[#1a1a1a] px-2">
+      <div className="flex flex-shrink-0 items-center gap-1 border-l border-(--dt-border) px-2">
         <button
           onClick={onOpenShare}
           disabled={!canShare}
           title="Share note (⌘⇧S)"
-          className="flex h-7 w-7 items-center justify-center rounded text-[#555] transition-colors hover:bg-[#1a1a1a] hover:text-[#39ff14] disabled:cursor-not-allowed disabled:opacity-30"
+          className="flex h-7 w-7 items-center justify-center rounded text-(--dt-subtle-foreground) transition-colors hover:bg-(--dt-accent) hover:text-(--dt-accent-foreground) disabled:cursor-not-allowed disabled:opacity-30"
         >
           <Share2 size={13} strokeWidth={2} />
         </button>
@@ -114,8 +114,8 @@ export default function TopBar({
           onClick={onOpenContrib}
           disabled={!canContrib}
           title={isContrib ? "Contribution link" : "Make contribution note"}
-          className={`flex h-7 w-7 items-center justify-center rounded transition-colors hover:bg-[#1a1a1a] hover:text-[#39ff14] disabled:cursor-not-allowed disabled:opacity-30 ${
-            isContrib ? "text-[#39ff14]" : "text-[#555]"
+          className={`flex h-7 w-7 items-center justify-center rounded transition-colors hover:bg-(--dt-accent) hover:text-(--dt-accent-foreground) disabled:cursor-not-allowed disabled:opacity-30 ${
+            isContrib ? "text-(--dt-accent-foreground)" : "text-(--dt-subtle-foreground)"
           }`}
         >
           <Users size={13} strokeWidth={2} />
@@ -123,14 +123,14 @@ export default function TopBar({
         <button
           onClick={onCreate}
           title="New note (⌘N)"
-          className="flex h-7 w-7 items-center justify-center rounded text-[#555] transition-colors hover:bg-[#1a1a1a] hover:text-[#39ff14]"
+          className="flex h-7 w-7 items-center justify-center rounded text-(--dt-subtle-foreground) transition-colors hover:bg-(--dt-accent) hover:text-(--dt-accent-foreground)"
         >
           <Plus size={15} strokeWidth={2} />
         </button>
         <button
           onClick={onOpenSettings}
           title="Settings"
-          className="flex h-7 w-7 items-center justify-center rounded text-[#555] transition-colors hover:bg-[#1a1a1a] hover:text-[#e8e8e8]"
+          className="flex h-7 w-7 items-center justify-center rounded text-(--dt-subtle-foreground) transition-colors hover:bg-(--dt-accent) hover:text-(--dt-foreground)"
         >
           <Settings size={13} strokeWidth={2} />
         </button>

@@ -74,10 +74,10 @@ export default function SharedNotePage() {
 
   if (!mounted || state.status === "loading") {
     return (
-      <div className="flex h-screen flex-col bg-[#0a0a0a]">
-        <div className="h-11 border-b border-[#1a1a1a] bg-[#0f0f0f]" />
+      <div className="flex h-screen flex-col bg-(--dt-background)">
+        <div className="h-11 border-b border-(--dt-border) bg-(--dt-background-secondary)" />
         <div className="flex flex-1 items-center justify-center">
-          <div className="h-4 w-32 animate-pulse rounded bg-[#1a1a1a]" />
+          <div className="h-4 w-32 animate-pulse rounded bg-(--dt-skeleton-from)" />
         </div>
       </div>
     );
@@ -89,16 +89,16 @@ export default function SharedNotePage() {
         ? "This link was created with a newer version of datnotes. Try updating your app."
         : "This link appears to be broken or incomplete.";
     return (
-      <div className="flex h-screen flex-col bg-[#0a0a0a]">
-        <div className="flex h-11 items-center border-b border-[#1a1a1a] bg-[#0f0f0f] px-4">
-          <span className="text-xs font-medium text-[#555]">datnotes</span>
+      <div className="flex h-screen flex-col bg-(--dt-background)">
+        <div className="flex h-11 items-center border-b border-(--dt-border) bg-(--dt-background-secondary) px-4">
+          <span className="text-xs font-medium text-(--dt-subtle-foreground)">datnotes</span>
         </div>
         <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-          <p className="text-sm text-[#e8e8e8]">Couldn&apos;t open this note</p>
-          <p className="max-w-xs text-xs text-[#555]">{msg}</p>
+          <p className="text-sm text-(--dt-foreground)">Couldn&apos;t open this note</p>
+          <p className="max-w-xs text-xs text-(--dt-subtle-foreground)">{msg}</p>
           <a
             href="/"
-            className="mt-2 rounded-md border border-[#222] px-4 py-2 text-xs font-medium text-[#666] transition-colors hover:border-[#333] hover:text-[#999]"
+            className="mt-2 rounded-md border border-(--dt-border) px-4 py-2 text-xs font-medium text-(--dt-subtle-foreground) transition-colors hover:border-(--dt-input-border) hover:text-(--dt-muted-foreground)"
           >
             Go to datnotes
           </a>
@@ -112,13 +112,13 @@ export default function SharedNotePage() {
   const preview = entry.c;
 
   return (
-    <div className="flex h-screen flex-col bg-[#0a0a0a]">
+    <div className="flex h-screen flex-col bg-(--dt-background)">
       {/* Header bar */}
-      <div className="flex h-11 flex-shrink-0 items-center justify-between border-b border-[#1a1a1a] bg-[#0f0f0f] px-4">
-        <span className="text-xs font-medium text-[#555]">datnotes · shared note</span>
+      <div className="flex h-11 flex-shrink-0 items-center justify-between border-b border-(--dt-border) bg-(--dt-background-secondary) px-4">
+        <span className="text-xs font-medium text-(--dt-subtle-foreground)">datnotes · shared note</span>
         <a
           href="/"
-          className="text-xs text-[#444] transition-colors hover:text-[#666]"
+          className="text-xs text-(--dt-icon-tertiary) transition-colors hover:text-(--dt-subtle-foreground)"
         >
           Open app
         </a>
@@ -128,33 +128,32 @@ export default function SharedNotePage() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <div className="mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-6 py-8">
           {/* Title */}
-          <p className="mb-6 truncate text-sm font-semibold text-[#e8e8e8]">
+          <p className="mb-6 truncate text-sm font-semibold text-(--dt-foreground)">
             {firstLine}
           </p>
 
           {/* Read-only note content */}
-          <pre className="whitespace-pre-wrap break-words font-mono text-sm leading-relaxed text-[#aaa]">
+          <pre className="whitespace-pre-wrap break-words font-mono text-sm leading-relaxed text-(--dt-secondary-foreground)">
             {preview}
           </pre>
         </div>
 
         {/* Action bar */}
-        <div className="flex-shrink-0 border-t border-[#1a1a1a] bg-[#0f0f0f] px-6 py-4">
-          <p className="mb-3 text-center text-xs text-[#555]">
+        <div className="flex-shrink-0 border-t border-(--dt-border) bg-(--dt-background-secondary) px-6 py-4">
+          <p className="mb-3 text-center text-xs text-(--dt-subtle-foreground)">
             This note was shared via a self-contained link. It was never uploaded to any server.
           </p>
           <div className="flex items-center justify-center gap-2">
             <button
               onClick={handleCopy}
-              className="rounded-md border border-[#222] px-4 py-2 text-xs font-medium text-[#666] transition-colors hover:border-[#333] hover:text-[#999]"
+              className="rounded-md border border-(--dt-border) px-4 py-2 text-xs font-medium text-(--dt-subtle-foreground) transition-colors hover:border-(--dt-input-border) hover:text-(--dt-muted-foreground)"
             >
               {copied ? "Copied!" : "Copy text"}
             </button>
             <button
               onClick={handleSave}
               disabled={saved}
-              className="rounded-md bg-[#39ff14]/10 px-4 py-2 text-xs font-medium text-[#39ff14] transition-colors hover:bg-[#39ff14]/20 disabled:cursor-not-allowed disabled:opacity-50"
-              style={{ border: "1px solid #39ff1433" }}
+              className="rounded-md bg-(--dt-primary) px-4 py-2 text-xs font-medium text-(--dt-primary-foreground) transition-colors hover:bg-(--dt-primary-hover) disabled:cursor-not-allowed disabled:opacity-50"
             >
               {saved ? "Saved!" : "Save to my notes"}
             </button>

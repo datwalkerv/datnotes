@@ -169,11 +169,11 @@ export default function App() {
   }, [createNote, activeNote]);
 
   if (!mounted) {
-    return <div className="h-screen bg-[#0a0a0a]" />;
+    return <div className="h-screen bg-(--dt-background)" />;
   }
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-[#0a0a0a]">
+    <div className="flex h-screen flex-col overflow-hidden bg-(--dt-background)">
       <TopBar
         notes={notes}
         activeId={activeId}

@@ -125,10 +125,10 @@ export default function ContribNotePage() {
 
   if (state.status === "loading") {
     return (
-      <div className="flex h-screen flex-col bg-[#0a0a0a]">
-        <div className="h-11 border-b border-[#1a1a1a] bg-[#0f0f0f]" />
+      <div className="flex h-screen flex-col bg-(--dt-background)">
+        <div className="h-11 border-b border-(--dt-border) bg-(--dt-background-secondary)" />
         <div className="flex flex-1 items-center justify-center">
-          <div className="h-4 w-32 animate-pulse rounded bg-[#1a1a1a]" />
+          <div className="h-4 w-32 animate-pulse rounded bg-(--dt-skeleton-from)" />
         </div>
       </div>
     );
@@ -142,16 +142,16 @@ export default function ContribNotePage() {
         ? "This link appears to be broken or incomplete."
         : "Couldn't reach the server. Check your connection and try again.";
     return (
-      <div className="flex h-screen flex-col bg-[#0a0a0a]">
-        <div className="flex h-11 items-center border-b border-[#1a1a1a] bg-[#0f0f0f] px-4">
-          <span className="text-xs font-medium text-[#555]">datnotes</span>
+      <div className="flex h-screen flex-col bg-(--dt-background)">
+        <div className="flex h-11 items-center border-b border-(--dt-border) bg-(--dt-background-secondary) px-4">
+          <span className="text-xs font-medium text-(--dt-subtle-foreground)">datnotes</span>
         </div>
         <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-          <p className="text-sm text-[#e8e8e8]">Couldn&apos;t open this note</p>
-          <p className="max-w-xs text-xs text-[#555]">{msg}</p>
+          <p className="text-sm text-(--dt-foreground)">Couldn&apos;t open this note</p>
+          <p className="max-w-xs text-xs text-(--dt-subtle-foreground)">{msg}</p>
           <Link
             href="/"
-            className="mt-2 rounded-md border border-[#222] px-4 py-2 text-xs font-medium text-[#666] transition-colors hover:border-[#333] hover:text-[#999]"
+            className="mt-2 rounded-md border border-(--dt-border) px-4 py-2 text-xs font-medium text-(--dt-subtle-foreground) transition-colors hover:border-(--dt-input-border) hover:text-(--dt-muted-foreground)"
           >
             Go to datnotes
           </Link>
@@ -168,12 +168,12 @@ export default function ContribNotePage() {
   }[saveStatus];
 
   return (
-    <div className="flex h-screen flex-col bg-[#0a0a0a]">
-      <div className="flex h-11 flex-shrink-0 items-center justify-between border-b border-[#1a1a1a] bg-[#0f0f0f] px-4">
-        <span className="text-xs font-medium text-[#555]">datnotes · contribution note</span>
+    <div className="flex h-screen flex-col bg-(--dt-background)">
+      <div className="flex h-11 flex-shrink-0 items-center justify-between border-b border-(--dt-border) bg-(--dt-background-secondary) px-4">
+        <span className="text-xs font-medium text-(--dt-subtle-foreground)">datnotes · contribution note</span>
         <div className="flex items-center gap-4">
           <span
-            className={`text-[10px] ${saveStatus === "error" ? "text-red-400" : "text-[#444]"}`}
+            className={`text-[10px] ${saveStatus === "error" ? "text-(--dt-destructive)" : "text-(--dt-icon-tertiary)"}`}
             aria-live="polite"
           >
             {statusText}
@@ -181,11 +181,11 @@ export default function ContribNotePage() {
           <button
             onClick={handleSave}
             disabled={saved}
-            className="text-xs text-[#39ff14] transition-colors hover:text-[#39ff14]/80 disabled:opacity-50"
+            className="text-xs text-(--dt-accent-foreground) transition-colors hover:text-(--dt-muted-foreground) disabled:opacity-50"
           >
             {saved ? "Saved!" : "Save to my notes"}
           </button>
-          <Link href="/" className="text-xs text-[#444] transition-colors hover:text-[#666]">
+          <Link href="/" className="text-xs text-(--dt-icon-tertiary) transition-colors hover:text-(--dt-subtle-foreground)">
             Open app
           </Link>
         </div>
@@ -195,14 +195,14 @@ export default function ContribNotePage() {
         value={content}
         onChange={(e) => handleChange(e.target.value)}
         aria-label="Note content"
-        className="flex-1 overflow-y-auto bg-transparent px-8 py-8 text-[15px] leading-relaxed text-[#d8d8d8] placeholder-[#2a2a2a] focus:outline-none"
+        className="flex-1 overflow-y-auto bg-transparent px-8 py-8 text-[15px] leading-relaxed text-(--dt-foreground) placeholder:text-(--dt-icon-tertiary) focus:outline-none"
         placeholder="Start writing…"
         spellCheck
         autoComplete="off"
         autoFocus
       />
 
-      <p className="flex-shrink-0 border-t border-[#1a1a1a] bg-[#0f0f0f] px-6 py-3 text-center text-[10px] text-[#444]">
+      <p className="flex-shrink-0 border-t border-(--dt-border) bg-(--dt-background-secondary) px-6 py-3 text-center text-[10px] text-(--dt-icon-tertiary)">
         Anyone with this link can edit. Content is end-to-end encrypted — the server only stores
         ciphertext.
       </p>

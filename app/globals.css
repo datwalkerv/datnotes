@@ -1,14 +1,58 @@
 @import "tailwindcss";
 
 :root {
-  --neon: #39ff14;
-  --bg: #0a0a0a;
-  --surface: #111111;
-  --surface-2: #1a1a1a;
-  --border: #222222;
-  --text: #e8e8e8;
-  --text-muted: #666666;
-  --text-faint: #444444;
+  --dt-background: #080808;
+  --dt-foreground: #ededeb;
+  --dt-background-secondary: #111111;
+  --dt-background-tertiary: #191919;
+  --dt-card: #101010;
+  --dt-card-foreground: #ededeb;
+  --dt-popover: #1c1c1c;
+  --dt-popover-foreground: #ededeb;
+  --dt-overlay: rgb(0 0 0 / 0.78);
+  --dt-overlay-light: rgb(255 255 255 / 0.045);
+
+  /* Brand & intent */
+  --dt-primary: #f1f1ef;
+  --dt-primary-hover: #d5d5d2;
+  --dt-primary-foreground: #080808;
+  --dt-secondary: rgb(255 255 255 / 0.075);
+  --dt-secondary-hover: rgb(255 255 255 / 0.12);
+  --dt-secondary-foreground: #e8e8e6;
+  --dt-muted: #202020;
+  --dt-muted-foreground: #a1a19d;
+  --dt-subtle-foreground: #858580;
+  --dt-accent: rgb(255 255 255 / 0.09);
+  --dt-accent-foreground: #f1f1ef;
+  --dt-destructive: #e1e1de;
+  --dt-destructive-hover: #ffffff;
+  --dt-destructive-foreground: #111111;
+  --dt-positive: #bcbcb7;
+  --dt-positive-foreground: #101010;
+  --dt-warning: #a4a49e;
+  --dt-warning-foreground: #080808;
+  --dt-link: #ededeb;
+  --dt-mark: rgb(255 255 255 / 0.15);
+
+  /* Lines */
+  --dt-border: rgb(255 255 255 / 0.12);
+  --dt-separator: #292929;
+  --dt-input: #151515;
+  --dt-input-border: rgb(255 255 255 / 0.16);
+  --dt-ring: rgb(255 255 255 / 0.72);
+
+  /* Controls */
+  --dt-control-track: #404040;
+  --dt-control-thumb: #f1f1ef;
+  --dt-skeleton-from: #191919;
+  --dt-skeleton-to: #292929;
+  --dt-icon-secondary: #a0a09b;
+  --dt-icon-tertiary: #656560;
+
+  /* Shadows */
+  --dt-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35), 0 0 1px rgb(255 255 255 / 0.035);
+  --dt-shadow-md: 0 6px 18px rgb(0 0 0 / 0.36), 0 1px 3px rgb(0 0 0 / 0.22);
+  --dt-shadow-lg: 0 14px 40px rgb(0 0 0 / 0.5), 0 2px 10px rgb(0 0 0 / 0.24);
 }
 
 * {
@@ -18,15 +62,15 @@
 html,
 body {
   height: 100%;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--dt-background);
+  color: var(--dt-foreground);
   font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--neon);
-  color: #000;
+  background: var(--dt-mark);
+  color: var(--dt-foreground);
 }
 
 ::-webkit-scrollbar {
@@ -38,12 +82,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2a2a2a;
+  background: var(--dt-control-track);
   border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a3a;
+  background: var(--dt-icon-tertiary);
 }
 
 textarea {

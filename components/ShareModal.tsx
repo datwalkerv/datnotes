@@ -90,23 +90,23 @@ export default function ShareModal({ note, url, onClose }: Props) {
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-(--dt-overlay) backdrop-blur-sm"
       onClick={handleOverlayClick}
     >
-      <div className="relative w-full max-w-sm rounded-xl border border-[#222] bg-[#111] p-6 shadow-2xl">
+      <div className="relative w-full max-w-sm rounded-xl border border-(--dt-border) bg-(--dt-popover) p-6 shadow-(--dt-shadow-lg)">
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded text-[#555] transition-colors hover:text-[#999]"
+          className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded text-(--dt-subtle-foreground) transition-colors hover:text-(--dt-muted-foreground)"
         >
           <X size={14} strokeWidth={2} />
         </button>
 
         {/* Header */}
-        <p className="mb-4 text-sm font-semibold text-[#e8e8e8]">{url ? "Contribution note" : "Share note"}</p>
+        <p className="mb-4 text-sm font-semibold text-(--dt-foreground)">{url ? "Contribution note" : "Share note"}</p>
 
         {/* Tabs */}
-        <div className="mb-4 flex gap-1 rounded-lg border border-[#1a1a1a] bg-[#0d0d0d] p-0.5">
+        <div className="mb-4 flex gap-1 rounded-lg border border-(--dt-border) bg-(--dt-input) p-0.5">
           {(["link", "qr"] as Tab[]).map((t) => {
             const isDisabled = t === "qr" && tier === "qr-disabled";
             return (
@@ -116,8 +116,8 @@ export default function ShareModal({ note, url, onClose }: Props) {
                 onClick={() => !isDisabled && setTab(t)}
                 className={`flex-1 rounded-md py-1.5 text-xs font-medium transition-colors ${
                   tab === t
-                    ? "bg-[#1a1a1a] text-[#e8e8e8]"
-                    : "text-[#555] hover:text-[#999]"
+                    ? "bg-(--dt-secondary) text-(--dt-foreground)"
+                    : "text-(--dt-subtle-foreground) hover:text-(--dt-muted-foreground)"
                 } disabled:cursor-not-allowed disabled:opacity-30`}
               >
                 {t === "link" ? "Link" : "QR code"}
@@ -129,18 +129,18 @@ export default function ShareModal({ note, url, onClose }: Props) {
         {tab === "link" && (
           <div className="space-y-3">
             {/* Link box */}
-            <div className="flex items-center gap-2 overflow-hidden rounded-lg border border-[#1a1a1a] bg-[#0d0d0d] px-3 py-2">
-              <span className="flex-1 truncate font-mono text-[10px] text-[#666]">
+            <div className="flex items-center gap-2 overflow-hidden rounded-lg border border-(--dt-border) bg-(--dt-input) px-3 py-2">
+              <span className="flex-1 truncate font-mono text-[10px] text-(--dt-subtle-foreground)">
                 {shareUrl ?? "Generating…"}
               </span>
               <button
                 onClick={handleCopy}
                 disabled={!shareUrl}
                 title="Copy link"
-                className="flex flex-shrink-0 items-center justify-center rounded text-[#555] transition-colors hover:text-[#999] disabled:opacity-30"
+                className="flex flex-shrink-0 items-center justify-center rounded text-(--dt-subtle-foreground) transition-colors hover:text-(--dt-muted-foreground) disabled:opacity-30"
               >
                 {copied ? (
-                  <Check size={13} strokeWidth={2} className="text-[#39ff14]" />
+                  <Check size={13} strokeWidth={2} className="text-(--dt-accent-foreground)" />
                 ) : (
                   <Copy size={13} strokeWidth={2} />
                 )}
@@ -150,7 +150,7 @@ export default function ShareModal({ note, url, onClose }: Props) {
             {/* Size meter */}
             {!url && urlLen > 0 && (
               <div>
-                <div className="mb-1 flex justify-between text-[10px] text-[#444]">
+                <div className="mb-1 flex justify-between text-[10px] text-(--dt-icon-tertiary)">
                   <span>Link size</span>
                   <span>
                     {urlLen.toLocaleString()} chars
@@ -158,27 +158,27 @@ export default function ShareModal({ note, url, onClose }: Props) {
                     {tier === "qr-disabled" && " · QR unavailable"}
                   </span>
                 </div>
-                <div className="h-1 w-full overflow-hidden rounded-full bg-[#1a1a1a]">
+                <div className="h-1 w-full overflow-hidden rounded-full bg-(--dt-control-track)">
                   <div
                     className="h-full rounded-full transition-all"
                     style={{
                       width: `${Math.min(100, (urlLen / 8000) * 100)}%`,
                       background:
                         tier === "qr-disabled"
-                          ? "#ef4444"
+                          ? "var(--dt-destructive)"
                           : tier === "warn"
-                          ? "#f59e0b"
-                          : "#39ff14",
+                          ? "var(--dt-warning)"
+                          : "var(--dt-positive)",
                     }}
                   />
                 </div>
                 {tier === "warn" && (
-                  <p className="mt-1.5 text-[10px] text-[#666]">
+                  <p className="mt-1.5 text-[10px] text-(--dt-subtle-foreground)">
                     This link is long — some apps may truncate it.
                   </p>
                 )}
                 {tier === "qr-disabled" && (
-                  <p className="mt-1.5 text-[10px] text-[#666]">
+                  <p className="mt-1.5 text-[10px] text-(--dt-subtle-foreground)">
                     Note is too long to encode as a QR code, but the link still works.
                   </p>
                 )}
@@ -190,10 +190,10 @@ export default function ShareModal({ note, url, onClose }: Props) {
               <button
                 onClick={handleCopy}
                 disabled={!shareUrl}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-[#222] py-2 text-xs font-medium text-[#666] transition-colors hover:border-[#333] hover:text-[#999] disabled:opacity-30"
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-(--dt-border) py-2 text-xs font-medium text-(--dt-subtle-foreground) transition-colors hover:border-(--dt-input-border) hover:text-(--dt-muted-foreground) disabled:opacity-30"
               >
                 {copied ? (
-                  <Check size={12} strokeWidth={2} className="text-[#39ff14]" />
+                  <Check size={12} strokeWidth={2} className="text-(--dt-accent-foreground)" />
                 ) : (
                   <Copy size={12} strokeWidth={2} />
                 )}
@@ -204,7 +204,7 @@ export default function ShareModal({ note, url, onClose }: Props) {
                 <button
                   onClick={handleShare}
                   disabled={!shareUrl}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-[#222] py-2 text-xs font-medium text-[#666] transition-colors hover:border-[#333] hover:text-[#999] disabled:opacity-30"
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-(--dt-border) py-2 text-xs font-medium text-(--dt-subtle-foreground) transition-colors hover:border-(--dt-input-border) hover:text-(--dt-muted-foreground) disabled:opacity-30"
                 >
                   <Share2 size={12} strokeWidth={2} />
                   Share
@@ -217,7 +217,7 @@ export default function ShareModal({ note, url, onClose }: Props) {
         {tab === "qr" && shareUrl && <QrCode url={shareUrl} />}
 
         {/* Disclaimer */}
-        <p className="mt-4 text-center text-[10px] text-[#333]">
+        <p className="mt-4 text-center text-[10px] text-(--dt-icon-tertiary)">
           {url
             ? "Anyone with this link can read and edit this note."
             : "Anyone with this link can read this note."}

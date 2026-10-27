@@ -20,7 +20,7 @@ export default function QrCode({ url }: Props) {
     QRCode.toCanvas(canvasRef.current, url, {
       width: 220,
       margin: 2,
-      color: { dark: "#e8e8e8", light: "#111111" },
+      color: { dark: "#ededeb", light: "#101010" },
     }).catch(() => setError(true));
   }, [url]);
 
@@ -34,7 +34,7 @@ export default function QrCode({ url }: Props) {
 
   if (error) {
     return (
-      <p className="py-4 text-center text-xs text-[#555]">
+      <p className="py-4 text-center text-xs text-(--dt-subtle-foreground)">
         Note is too long to generate a QR code.
       </p>
     );
@@ -42,12 +42,12 @@ export default function QrCode({ url }: Props) {
 
   return (
     <div className="flex flex-col items-center gap-4 py-2">
-      <div className="overflow-hidden rounded-lg border border-[#222] bg-[#111]">
+      <div className="overflow-hidden rounded-lg border border-(--dt-border) bg-(--dt-card)">
         <canvas ref={canvasRef} />
       </div>
       <button
         onClick={handleDownload}
-        className="flex items-center gap-1.5 rounded-md border border-[#222] px-3 py-1.5 text-xs font-medium text-[#666] transition-colors hover:border-[#333] hover:text-[#999]"
+        className="flex items-center gap-1.5 rounded-md border border-(--dt-border) px-3 py-1.5 text-xs font-medium text-(--dt-subtle-foreground) transition-colors hover:border-(--dt-input-border) hover:text-(--dt-muted-foreground)"
       >
         <Download size={12} strokeWidth={2} />
         Download PNG

@@ -1,15 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" rx="8" fill="#39FF14" />
-  <text
-    x="16"
-    y="16.5"
-    dominant-baseline="middle"
-    text-anchor="middle"
-    font-family="system-ui, -apple-system, sans-serif"
-    font-weight="bold"
-    font-size="14"
-    fill="black"
-  >
-    dn
-  </text>
-</svg>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#191919"/><stop offset="1" stop-color="#080808"/></linearGradient></defs><rect width="128" height="128" rx="28" fill="url(#bg)"/><rect x="0.5" y="0.5" width="127" height="127" rx="27.5" fill="none" stroke="#fff" stroke-opacity="0.12"/><g transform="translate(35.2 35.2) scale(2.4)" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></g></svg>
