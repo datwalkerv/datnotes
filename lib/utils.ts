@@ -71,3 +71,54 @@ export function searchNotes(notes: Note[], query: string): NoteMatch[] {
   }
   return [...titleHits, ...bodyHits];
 }
+
+const CONTRIB_URL = /^https?:\/\/[^/\s]+\/c\/[A-Za-z0-9]+#[A-Za-z0-9_-]+$/;
+
+function isDate(v: unknown): v is string {
+  return typeof v === "string" && !Number.isNaN(Date.parse(v));
+}
+
+// Parses an untrusted export file (or a bare note array); throws on anything malformed
+export function parseNotesExport(text: string): Note[] {
+  let data: unknown;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error("File is not valid JSON");
+  }
+  const list = Array.isArray(data) ? data : (data as { notes?: unknown } | null)?.notes;
+  if (!Array.isArray(list)) throw new Error("No notes found in file");
+
+  return list.map((raw, i) => {
+    const n = raw as Partial<Record<keyof Note, unknown>> | null;
+    if (
+      !n ||
+      typeof n.id !== "string" ||
+      !n.id ||
+      typeof n.content !== "string" ||
+      !isDate(n.createdAt) ||
+      !isDate(n.updatedAt)
+    ) {
+      throw new Error(`Note ${i + 1} is malformed`);
+    }
+    const note: Note = { id: n.id, content: n.content, createdAt: n.createdAt, updatedAt: n.updatedAt };
+    // Only keep links shaped like our own contribution URLs; drop anything else
+    if (typeof n.contribUrl === "string" && CONTRIB_URL.test(n.contribUrl)) note.contribUrl = n.contribUrl;
+    return note;
+  });
+}
+
+// Adds unknown notes; replaces a known one only if the incoming copy was edited later
+export function mergeNotes(existing: Note[], incoming: Note[]) {
+  const byId = new Map(existing.map((n) => [n.id, n]));
+  let added = 0;
+  let updated = 0;
+  for (const n of incoming) {
+    const cur = byId.get(n.id);
+    if (!cur) added++;
+    else if (Date.parse(n.updatedAt) > Date.parse(cur.updatedAt)) updated++;
+    else continue;
+    byId.set(n.id, n);
+  }
+  return { notes: [...byId.values()], added, updated };
+}

@@ -9,7 +9,7 @@ import {
   saveActiveNoteId,
   saveNotes,
 } from "@/lib/storage";
-import { generateId } from "@/lib/utils";
+import { generateId, mergeNotes } from "@/lib/utils";
 import { encrypt, newKey } from "@/lib/crypto";
 import TopBar from "./TopBar";
 import Editor from "./Editor";
@@ -125,6 +125,18 @@ export default function App() {
     saveActiveNoteId(note.id);
   }, []);
 
+  const importNotes = useCallback(
+    (incoming: Note[]) => {
+      // Drop any pending debounced save so it can't overwrite the merged list
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      const merged = mergeNotes(notes, incoming);
+      setNotes(merged.notes);
+      saveNotes(merged.notes);
+      return merged;
+    },
+    [notes]
+  );
+
   const activeNote = notes.find((n) => n.id === activeId) ?? null;
 
   const openContrib = useCallback(async () => {
@@ -215,6 +227,7 @@ export default function App() {
         <SettingsModal
           notes={notes}
           onDeleteAll={deleteAll}
+          onImport={importNotes}
           onClose={() => setSettingsOpen(false)}
         />
       )}

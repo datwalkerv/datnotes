@@ -1,19 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X, Trash2, AlertTriangle, Download } from "lucide-react";
+import { X, Trash2, AlertTriangle, Download, Upload } from "lucide-react";
 import type { Note } from "@/lib/types";
+import { parseNotesExport } from "@/lib/utils";
 
 interface Props {
   notes: Note[];
   onDeleteAll: () => void;
+  onImport: (notes: Note[]) => { added: number; updated: number };
   onClose: () => void;
 }
 
-export default function SettingsModal({ notes, onDeleteAll, onClose }: Props) {
+export default function SettingsModal({ notes, onDeleteAll, onImport, onClose }: Props) {
   const noteCount = notes.length;
   const [confirming, setConfirming] = useState(false);
+  const [importMsg, setImportMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   // Close on Escape
   useEffect(() => {
@@ -41,6 +45,25 @@ export default function SettingsModal({ notes, onDeleteAll, onClose }: Props) {
     a.download = `datnotes-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 0);
+  };
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow picking the same file again
+    if (!file) return;
+    try {
+      if (file.size > 5_000_000) throw new Error("File is too large (max 5 MB)");
+      const { added, updated } = onImport(parseNotesExport(await file.text()));
+      setImportMsg({
+        ok: true,
+        text:
+          added || updated
+            ? `Imported ${added} new, updated ${updated} note${updated === 1 ? "" : "s"}`
+            : "Nothing new — all notes are already up to date",
+      });
+    } catch (err) {
+      setImportMsg({ ok: false, text: err instanceof Error ? err.message : "Import failed" });
+    }
   };
 
   const handleDeleteAll = () => {
@@ -91,18 +114,44 @@ export default function SettingsModal({ notes, onDeleteAll, onClose }: Props) {
 
         {/* Export */}
         <div className="mb-6 rounded-lg border border-(--dt-border) bg-(--dt-input) p-4">
-          <p className="mb-1 text-xs font-medium text-(--dt-subtle-foreground)">Export</p>
+          <p className="mb-1 text-xs font-medium text-(--dt-subtle-foreground)">Backup</p>
           <p className="mb-3 text-[11px] text-(--dt-icon-tertiary)">
-            Download all notes as a JSON file to back them up or move them elsewhere.
+            Export your notes as JSON, or import a file to bring them into this browser.
           </p>
-          <button
-            onClick={handleExport}
-            disabled={noteCount === 0}
-            className="flex w-full items-center justify-center gap-2 rounded-md border border-(--dt-border) px-3 py-2 text-xs font-medium text-(--dt-muted-foreground) transition-colors hover:border-(--dt-input-border) hover:bg-(--dt-accent) hover:text-(--dt-foreground) disabled:cursor-not-allowed disabled:opacity-30"
-          >
-            <Download size={12} strokeWidth={2} />
-            Export notes as JSON
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleExport}
+              disabled={noteCount === 0}
+              className="flex flex-1 items-center justify-center gap-2 rounded-md border border-(--dt-border) px-3 py-2 text-xs font-medium text-(--dt-muted-foreground) transition-colors hover:border-(--dt-input-border) hover:bg-(--dt-accent) hover:text-(--dt-foreground) disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <Download size={12} strokeWidth={2} />
+              Export
+            </button>
+            <button
+              onClick={() => fileRef.current?.click()}
+              className="flex flex-1 items-center justify-center gap-2 rounded-md border border-(--dt-border) px-3 py-2 text-xs font-medium text-(--dt-muted-foreground) transition-colors hover:border-(--dt-input-border) hover:bg-(--dt-accent) hover:text-(--dt-foreground)"
+            >
+              <Upload size={12} strokeWidth={2} />
+              Import
+            </button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="application/json,.json"
+              onChange={handleImport}
+              className="hidden"
+            />
+          </div>
+          {importMsg && (
+            <p
+              role="status"
+              className={`mt-2 text-[11px] ${
+                importMsg.ok ? "text-(--dt-positive)" : "text-(--dt-destructive)"
+              }`}
+            >
+              {importMsg.text}
+            </p>
+          )}
         </div>
 
         {/* Danger zone */}
