@@ -15,10 +15,11 @@ import TopBar from "./TopBar";
 import Editor from "./Editor";
 import SettingsModal from "./SettingsModal";
 import ShareModal from "./ShareModal";
+import QuickSwitcher from "./QuickSwitcher";
 
-function makeEmptyNote(): Note {
+function makeEmptyNote(content = ""): Note {
   const now = new Date().toISOString();
-  return { id: generateId(), content: "", createdAt: now, updatedAt: now };
+  return { id: generateId(), content, createdAt: now, updatedAt: now };
 }
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [contribOpen, setContribOpen] = useState(false);
+  const [switcherOpen, setSwitcherOpen] = useState(false);
   const [contribBusy, setContribBusy] = useState(false);
   const [mounted, setMounted] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -61,8 +63,8 @@ export default function App() {
     saveTimer.current = setTimeout(() => saveNotes(updated), 200);
   }, []);
 
-  const createNote = useCallback(() => {
-    const note = makeEmptyNote();
+  const createNote = useCallback((content = "") => {
+    const note = makeEmptyNote(content);
     setNotes((prev) => {
       const updated = [...prev, note];
       saveNotes(updated);
@@ -155,6 +157,10 @@ export default function App() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSwitcherOpen((o) => !o);
+      }
       if ((e.metaKey || e.ctrlKey) && e.key === "n") {
         e.preventDefault();
         createNote();
@@ -178,7 +184,8 @@ export default function App() {
         notes={notes}
         activeId={activeId}
         onSelect={setActiveId}
-        onCreate={createNote}
+        onCreate={() => createNote()}
+        onOpenSearch={() => setSwitcherOpen(true)}
         onDelete={deleteNote}
         onOpenSettings={() => setSettingsOpen(true)}
         onOpenShare={() => setShareOpen(true)}
@@ -193,6 +200,16 @@ export default function App() {
           <Editor note={activeNote} onChange={updateNote} />
         )}
       </main>
+
+      {switcherOpen && (
+        <QuickSwitcher
+          notes={notes}
+          onSelect={setActiveId}
+          onCreate={createNote}
+          onDelete={deleteNote}
+          onClose={() => setSwitcherOpen(false)}
+        />
+      )}
 
       {settingsOpen && (
         <SettingsModal

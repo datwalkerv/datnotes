@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Settings, Share2, Users, X } from "lucide-react";
+import { Plus, Search, Settings, Share2, Users, X } from "lucide-react";
 import { useRef, useState } from "react";
 import type { Note } from "@/lib/types";
 import { getTitle } from "@/lib/utils";
@@ -10,6 +10,7 @@ interface Props {
   activeId: string | null;
   onSelect: (id: string) => void;
   onCreate: () => void;
+  onOpenSearch: () => void;
   onDelete: (id: string) => void;
   onOpenSettings: () => void;
   onOpenShare: () => void;
@@ -24,6 +25,7 @@ export default function TopBar({
   activeId,
   onSelect,
   onCreate,
+  onOpenSearch,
   onDelete,
   onOpenSettings,
   onOpenShare,
@@ -102,6 +104,13 @@ export default function TopBar({
 
       {/* Action buttons */}
       <div className="flex flex-shrink-0 items-center gap-1 border-l border-(--dt-border) px-2">
+        <button
+          onClick={onOpenSearch}
+          title="Search notes (⌘K)"
+          className="flex h-7 w-7 items-center justify-center rounded text-(--dt-subtle-foreground) transition-colors hover:bg-(--dt-accent) hover:text-(--dt-accent-foreground)"
+        >
+          <Search size={13} strokeWidth={2} />
+        </button>
         <button
           onClick={onOpenShare}
           disabled={!canShare}
