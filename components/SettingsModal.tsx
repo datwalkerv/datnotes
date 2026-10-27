@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X, Trash2, AlertTriangle } from "lucide-react";
+import { X, Trash2, AlertTriangle, Download } from "lucide-react";
+import type { Note } from "@/lib/types";
 
 interface Props {
-  noteCount: number;
+  notes: Note[];
   onDeleteAll: () => void;
   onClose: () => void;
 }
 
-export default function SettingsModal({ noteCount, onDeleteAll, onClose }: Props) {
+export default function SettingsModal({ notes, onDeleteAll, onClose }: Props) {
+  const noteCount = notes.length;
   const [confirming, setConfirming] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -27,6 +29,18 @@ export default function SettingsModal({ noteCount, onDeleteAll, onClose }: Props
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === overlayRef.current) onClose();
+  };
+
+  const handleExport = () => {
+    const data = { app: "datnotes", version: 1, exportedAt: new Date().toISOString(), notes };
+    const url = URL.createObjectURL(
+      new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
+    );
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `datnotes-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
   };
 
   const handleDeleteAll = () => {
@@ -73,6 +87,22 @@ export default function SettingsModal({ noteCount, onDeleteAll, onClose }: Props
             <span className="text-(--dt-subtle-foreground)">Storage</span>
             <span className="font-medium text-(--dt-muted-foreground)">localStorage</span>
           </div>
+        </div>
+
+        {/* Export */}
+        <div className="mb-6 rounded-lg border border-(--dt-border) bg-(--dt-input) p-4">
+          <p className="mb-1 text-xs font-medium text-(--dt-subtle-foreground)">Export</p>
+          <p className="mb-3 text-[11px] text-(--dt-icon-tertiary)">
+            Download all notes as a JSON file to back them up or move them elsewhere.
+          </p>
+          <button
+            onClick={handleExport}
+            disabled={noteCount === 0}
+            className="flex w-full items-center justify-center gap-2 rounded-md border border-(--dt-border) px-3 py-2 text-xs font-medium text-(--dt-muted-foreground) transition-colors hover:border-(--dt-input-border) hover:bg-(--dt-accent) hover:text-(--dt-foreground) disabled:cursor-not-allowed disabled:opacity-30"
+          >
+            <Download size={12} strokeWidth={2} />
+            Export notes as JSON
+          </button>
         </div>
 
         {/* Danger zone */}

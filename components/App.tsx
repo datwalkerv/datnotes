@@ -213,7 +213,7 @@ export default function App() {
 
       {settingsOpen && (
         <SettingsModal
-          noteCount={notes.length}
+          notes={notes}
           onDeleteAll={deleteAll}
           onClose={() => setSettingsOpen(false)}
         />
